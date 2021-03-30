@@ -42,7 +42,12 @@ function getPrices(coinList, inCurr) {
   let coins = coinList.split(",");
   for (let coin in coins) {
     let curr = coins[coin];
-    response.push(obj[curr][inCurr]);
+    try {
+      var price = obj[curr][inCurr];
+    } catch (e) {
+      var price = 0;
+    }
+    response.push(price);
   }
   return response;
 }
