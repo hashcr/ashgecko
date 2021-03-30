@@ -53,7 +53,7 @@ function getPrices(coinList, inCurr) {
 function getIds(symbolList) {
 
   if(null == symbolList || symbolList === "") {
-    symbolList = "btc,eth";
+    symbolList = "eth,doge,btc";
   } else {
     symbolList = symbolList.toLowerCase();
   }
