@@ -1,5 +1,7 @@
 //Author: Ashuin Sharma
 
+const TTL_IDS_MILLIS = 3600000; // 1 hour
+
 // @param coinList Send a String of Ticker Symbols separated by comma (e.g eth,btc,ada)
 // @param inCurr The Ticker Symbol of the currency you want to see the results (USD by default)
 // @returns the prices in the desired currency
@@ -27,14 +29,16 @@ function getPrices(coinList, inCurr) {
   const URL = endpoint + ids + vsCurr;
 
   // Actual API call
-  // Set a property in each of the three property stores.
   var scriptProperties = PropertiesService.getScriptProperties();
+  var responseText = "";
   try {
     let apiResponse = UrlFetchApp.fetch(URL);
-    var responseText = apiResponse.getContentText();
+    responseText = apiResponse.getContentText();
     scriptProperties.setProperty('CACHED_RESPONSE_PRICES', responseText);
   } catch(e) {
-    var responseText = scriptProperties.getProperty('CACHED_RESPONSE_PRICES');
+    Logger.log(e);
+    Logger.log("Error calling api. Using lst successful response to retrieve Crypto Prices.");
+    responseText = scriptProperties.getProperty('CACHED_RESPONSE_PRICES');
   }
 
   // Parsing response
@@ -42,10 +46,11 @@ function getPrices(coinList, inCurr) {
   let coins = coinList.split(",");
   for (let coin in coins) {
     let curr = coins[coin];
+    let price = 0;
     try {
-      var price = obj[curr][inCurr];
+      price = obj[curr][inCurr];
     } catch (e) {
-      var price = 0;
+      price = 0;
     }
     response.push(price);
   }
@@ -69,14 +74,22 @@ function getIds(symbolList) {
   const endpoint = "https://api.coingecko.com/api/v3/coins/list";
 
   // Actual API call
-  // Set a property in each of the three property stores.
-  var scriptProperties = PropertiesService.getScriptProperties();
+  let scriptProperties = PropertiesService.getScriptProperties();
+  let responseText = "";
   try {
-    let apiResponse = UrlFetchApp.fetch(endpoint);
-    var responseText = apiResponse.getContentText();
-    scriptProperties.setProperty('CACHED_RESPONSE_IDS', responseText);
+    let lastRetrieve = scriptProperties.getProperty('CACHED_RESPONSE_IDS_TS');
+    if (!lastRetrieve || (Date.now() - lastRetrieve > TTL_IDS_MILLIS)) {      
+      let apiResponse = UrlFetchApp.fetch(endpoint);
+      responseText = apiResponse.getContentText();
+      scriptProperties.setProperty('CACHED_RESPONSE_IDS', responseText);
+      scriptProperties.setProperty('CACHED_RESPONSE_IDS_TS', Date.now());
+    } else {
+      Logger.log("TTL active. Using cache to retrieve Crypto ID List.");
+      responseText = scriptProperties.getProperty('CACHED_RESPONSE_IDS');
+    }
   } catch(e) {
-    var responseText = scriptProperties.getProperty('CACHED_RESPONSE_IDS');
+    Logger.log("Error calling api. Using last successful response to retrieve Crypto ID List.");
+    responseText = scriptProperties.getProperty('CACHED_RESPONSE_IDS');
   }
     
   // Parsing response
