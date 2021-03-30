@@ -12,7 +12,10 @@ function getPrices(coinList, inCurr) {
   // If params are not present we set defaults
   if(inCurr==null || inCurr === "") {
     inCurr = "usd";
-  } 
+  } else {
+    inCurr = inCurr.toLowerCase();
+  }
+  
   if (coinList == null || coinList === "") {
     coinList = "ethereum,dogecoin,bitcoin";
   } else {
