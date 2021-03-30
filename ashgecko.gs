@@ -107,3 +107,4 @@ function getIds(symbolList) {
   }
   return response.join();
 }
+
