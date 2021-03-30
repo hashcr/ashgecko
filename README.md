@@ -1,4 +1,5 @@
 # ashgecko
+[View this file as raw text]
 
 Usage:
 
