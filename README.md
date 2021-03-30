@@ -29,4 +29,4 @@ My suggestion to have something like this (adjust column letters and numbers to 
 
 
 Thats, it.
-I hope is usefull.
+I hope is useful.
