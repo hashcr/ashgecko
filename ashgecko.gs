@@ -108,3 +108,48 @@ function getIds(symbolList) {
   return response.join();
 }
 
+
+//brings or get the price of one specific tiker and symbol
+function getPriceByTicker(coinSymbol, inCurr) {
+  // This is the array to be returned with the prices
+  var response = 'Err';
+  var coin;
+
+  // If params are not present we set defaults
+  if(inCurr==null || inCurr === "") {
+    inCurr = "usd";
+  } 
+  if (coinSymbol == null || coinSymbol === "") {
+    coin = "bitcoin"
+  } else {
+    coin = getIds(coinSymbol);
+  }
+
+  // Lets escape characters for request URL
+  escCoinList = escape(coin);
+  
+  // Setting the coin gecko API URL
+  const endpoint = "https://api.coingecko.com/api/v3/simple/price";
+  const id = "?ids=" + escCoinList;
+  const vsCurr = "&vs_currencies="+inCurr;
+  const URL = endpoint + id + vsCurr;
+
+  // Actual API call
+  // Set a property in each of the three property stores.
+  var scriptProperties = PropertiesService.getScriptProperties();
+  try {
+    let apiResponse = UrlFetchApp.fetch(URL);
+    var responseText = apiResponse.getContentText();
+  
+    scriptProperties.setProperty('CACHED_RESPONSE_PRICES_' + coin, responseText);
+  } catch(e) {
+    var responseText = scriptProperties.getProperty('CACHED_RESPONSE_PRICES_' + coin);
+  }
+
+  // Parsing response
+  let obj = JSON.parse(responseText);
+  
+  response = (obj[coin][inCurr]);
+  
+  return response;
+}
