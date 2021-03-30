@@ -20,8 +20,10 @@ function getPrices(coinList, inCurr) {
   }
 
   // Lets escape characters for request URL
-  escCoinList = escape(coinList);
-  
+  let escCoinList = escape(coinList);
+  // Cache variables
+  let cachedName = 'CACHED_RESPONSE_PRICES'+'_'+coinList.replace(',','_');
+
   // Setting the coin gecko API URL
   const endpoint = "https://api.coingecko.com/api/v3/simple/price";
   const ids = "?ids=" + escCoinList;
@@ -33,12 +35,12 @@ function getPrices(coinList, inCurr) {
   var responseText = "";
   try {
     let apiResponse = UrlFetchApp.fetch(URL);
-    responseText = apiResponse.getContentText();
-    scriptProperties.setProperty('CACHED_RESPONSE_PRICES', responseText);
+    responseText = apiResponse.getContentText();    
+    scriptProperties.setProperty(cachedName, responseText);
   } catch(e) {
     Logger.log(e);
     Logger.log("Error calling api. Using lst successful response to retrieve Crypto Prices.");
-    responseText = scriptProperties.getProperty('CACHED_RESPONSE_PRICES');
+    responseText = scriptProperties.getProperty(cachedName);
   }
 
   // Parsing response
