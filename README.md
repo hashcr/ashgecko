@@ -8,7 +8,7 @@ Usage:
 3- Create a spread sheet
 4- Click on Tools/Scripts
 5- Copy/Paste the downloaded script into your script editor
-6- Save it
+6- Then go to CoinMarketCap.com/api and register to get an API KEY and paste into the Script and Save the File.
 7- Click Deploy -> New Deployment
 8- Select Library and Name it. Click Done.
 9- Then in the editor select the function "getPrices" from the dropdown 
