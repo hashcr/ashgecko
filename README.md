@@ -28,10 +28,15 @@ My suggestion to have something like this  :
 4   DOGE
 5   TRX
 
-12- Edit cell B2 and put this formula =getPrices(JOIN(",";A2:A5))
+12- Edit cell B2 and put this formula =getPrices(JOIN(",";$A$2:$A$5);$B$1)
 (adjust column letters and numbers to your own spreadsheet needs. In this case A2 and A5 its just an example)
 
-13- This will bring the prices and put them in the B column.
+The script method is called :   getPrices(coinList, convertToCurrency)
+where coinList is a string with crypto currencies Ticker Symbol separated by comma.
+And convertToCurrency is an optional parameter to see the resulting prices in a specific
+currency. (defaults to USD)
+
+13- This will bring the prices converted to USD and put them in the B column.
 
 
 Thats, it.
